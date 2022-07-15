@@ -1011,6 +1011,7 @@ publish/
 !**/packages/build/
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
+/packages/
 
 # Windows Azure Build Output
 csx/
@@ -1084,3 +1085,5 @@ UpgradeLog*.htm
 *.exe
 *.out
 *.app
+
+
