@@ -1,0 +1,81 @@
+dataset: # Required.
+  type: pascal_semi
+  train:
+    data_root: finaldata/final/
+    data_list: finaldata/labeled.txt
+    flip: True
+    GaussianBlur: True
+    rand_resize: [0.8, 1.0]
+    #rand_rotation: [-10.0, 10.0]
+    crop:
+      type: rand
+      size: [250, 250] # crop image with HxW size
+  val:
+    data_root: finaldata/final/
+    data_list: finaldata/val.txt
+    crop:
+      type: center
+      size: [250, 250] # crop image with HxW size
+  batch_size: 2
+  n_sup: 800
+  noise_std: 0.1
+  workers: 2
+  mean: [117.871, 115.512, 118.21]
+  std: [45.079, 45.176, 42.465]
+  ignore_label: 100
+ 
+
+trainer: # Required.
+  epochs: 10
+  eval_on: True
+  optimizer:
+    type: SGD
+    kwargs:
+      lr: 0.001  # 4GPUs
+      momentum: 0.9
+      weight_decay: 0.00008
+  lr_scheduler:
+    mode: poly
+    kwargs:
+      power: 0.9
+  unsupervised:
+    TTA: True
+    drop_percent: 80
+    apply_aug: cutmix
+  contrastive:
+    negative_high_entropy: True
+    low_rank: 3
+    high_rank: 20
+    current_class_threshold: 0.3
+    current_class_negative_threshold: 1
+    unsupervised_entropy_ignore: 70
+    low_entropy_threshold: 20
+    num_negatives: 50
+    num_queries: 256
+    temperature: 0.7
+
+saver:
+  snapshot_dir: finaldata/checkpoints
+  pretrain: 'finaldata/checkpoints/final.pth'
+
+criterion:
+  type: CELoss
+  kwargs:
+    use_weight: True
+
+net: # Required.
+  num_classes: 6
+  sync_bn: False
+  ema_decay: 0.98
+  encoder:
+    type: u2pl.models.resnet.resnet101
+    kwargs:
+      multi_grid: True
+      zero_init_residual: True
+      fpn: True
+      replace_stride_with_dilation: [False, True, True]  #layer0...1 is fixed, layer2...4
+  decoder:
+    type: u2pl.models.decoder.dec_deeplabv3_plus
+    kwargs:
+      inner_planes: 256
+      dilations: [12, 24, 36]
