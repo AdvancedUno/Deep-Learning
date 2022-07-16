@@ -64,16 +64,22 @@ int main()
         return 1;
     }
 
-    OrtSessionOptions* session_options;
 
-    OrtCUDAProviderOptions options;
-    options.device_id = 0;
-    options.arena_extend_strategy = 0;
-    options.gpu_mem_limit = 2 * 1024 * 1024 * 1024;
-    options.cudnn_conv_algo_search = OrtCudnnConvAlgoSearchExhaustive;
-    options.do_copy_in_default_stream = 1;
 
-    SessionOptionsAppendExecutionProvider_CUDA(session_options, &options);
+    //Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING,
+    //    "efficient_Unet");
+    //Ort::SessionOptions sessionOptions;
+    //sessionOptions.SetIntraOpNumThreads(1);
+    //OrtCUDAProviderOptions cuda_options ;
+    //sessionOptions.AppendExecutionProvider_CUDA(cuda_options);
+    //sessionOptions.SetGraphOptimizationLevel(
+    //    GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
+
+
+
+
+
+
     
     for (int i = 0; i < 14; i++) {
 
@@ -81,8 +87,9 @@ int main()
         start = clock();
 
         // create Session
-        //session = Ort::Session(env, modelPath, Ort::SessionOptions{ nullptr });
-        session = Ort::Session(env, modelPath, session_options);
+        session = Ort::Session(env, modelPath, Ort::SessionOptions{ nullptr });
+        //session = Ort::Session(env, modelPath, session_options);
+  
  
         // Define I/O array
         // We can use vector instead of array
