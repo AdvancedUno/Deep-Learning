@@ -27,7 +27,7 @@ int main()
     
 
 
-    Ort::Env env;
+    //Ort::Env env;
     Ort::RunOptions runOptions;
     Ort::Session session(nullptr);
 
@@ -66,14 +66,14 @@ int main()
 
 
 
-    //Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING,
-    //    "efficient_Unet");
-    //Ort::SessionOptions sessionOptions;
-    //sessionOptions.SetIntraOpNumThreads(1);
-    //OrtCUDAProviderOptions cuda_options ;
-    //sessionOptions.AppendExecutionProvider_CUDA(cuda_options);
-    //sessionOptions.SetGraphOptimizationLevel(
-    //    GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
+    Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING,
+        "efficient_Unet");
+    Ort::SessionOptions sessionOptions;
+    sessionOptions.SetIntraOpNumThreads(1);
+    OrtCUDAProviderOptions cuda_options ;
+    sessionOptions.AppendExecutionProvider_CUDA(cuda_options);
+    sessionOptions.SetGraphOptimizationLevel(
+        GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
 
 
 
