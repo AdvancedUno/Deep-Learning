@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
+# Default ignored files
+/shelf/
+/workspace.xml
+
+
 # C extensions
 *.so
 
