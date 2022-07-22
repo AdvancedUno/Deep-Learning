@@ -5,8 +5,10 @@
 #include <assert.h>
 #include <vector>
 #include <onnxruntime_cxx_api.h>
-
-
+#include "Helpers.cpp"
+#include <iostream>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 //#ifdef HAVE_TENSORRT_PROVIDER_FACTORY_H
 #include <tensorrt_provider_factory.h>
@@ -39,7 +41,11 @@ std::unique_ptr<OrtTensorRTProviderOptionsV2> get_default_trt_provider_options()
 
 void run_ort_trt() {
     Ort::Env env;
+    //Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "test");
     const auto& api = Ort::GetApi();
+
+    const string imageFile = "C:/Users/sales/source/repos/OnnxTest/OnnxTest/repos/f3.bmp";
+
     OrtTensorRTProviderOptionsV2* tensorrt_options;
 
     Ort::SessionOptions session_options;
@@ -48,11 +54,12 @@ void run_ort_trt() {
     session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
 
 #ifdef _WIN32
-    const wchar_t* model_path = L"D:/Wintec/ADL/PyTorch/squeezenet.onnx";
+    //const wchar_t* model_path = L"D:/Wintec/ADL/PyTorch/squeezenet.onnx";
+    const wchar_t* model_path = L"C:/Users/sales/source/repos/onnxTest/onnxTest/repos/UnoDenoise.onnx";
 #else
     const char* model_path = "squeezenet.onnx";
 #endif
-
+    const vector<float> imageVec = loadImage(imageFile);
     //*****************************************************************************************
     // It's not suggested to directly new OrtTensorRTProviderOptionsV2 to get provider options
     //*****************************************************************************************
@@ -105,32 +112,95 @@ void run_ort_trt() {
             printf("Input %d : dim %zu=%jd\n", i, j, input_node_dims[j]);
     }
 
-    size_t input_tensor_size = 224 * 224 * 3;  // simplify ... using known dim values to calculate size
+    size_t input_tensor_size = 1*512 * 512;  // simplify ... using known dim values to calculate size
                                                // use OrtGetTensorShapeElementCount() to get official size!
 
+    ///////////////////////////////////////////////////////////////////////////
+    const array<int64_t, 4> inputShape = { 1, 1, 512, 512 };
+    const array<int64_t, 4> outputShape = { 1, 1, 512, 512 };
+
+    constexpr int64_t numChannels = 1;
+    constexpr int64_t width = 512;
+    constexpr int64_t height = 512;
+    //constexpr int64_t numClasses = 1000;
+    constexpr int64_t numInputElements = numChannels * height * width;
+    // define I/O Tensor
+    // It golds the array pointer internally.
+    // Dont's delete array while the Tensor alive.
+    // If use vector, Dont's reallocate memory after creating the Tensor
+
+    // define array
+    array<float, numInputElements> input;
+    array<float, numInputElements> results;
+
+    std::vector<const char*> output_node_names = { "output1" };
+
+    auto memory_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeDefault);
+    auto inputTensor = Ort::Value::CreateTensor<float>(memory_info, input.data(), input.size(), inputShape.data(), inputShape.size());
+    auto outputTensor = Ort::Value::CreateTensor<float>(memory_info, results.data(), results.size(), outputShape.data(), outputShape.size());
+
+
+    // copy image data to input array
+    copy(imageVec.begin(), imageVec.end(), input.begin());
+
+
+    // define names
+    Ort::AllocatorWithDefaultOptions ort_alloc;
+    char* inputName = session.GetInputName(0, ort_alloc);
+    char* outputName = session.GetOutputName(0, ort_alloc);
+    const array<const char*, 1> inputNames = { inputName };
+    const array<const char*, 1> outputNames = { outputName };
+    ort_alloc.Free(inputName);
+    ort_alloc.Free(outputName);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
     std::vector<float> input_tensor_values(input_tensor_size);
-    std::vector<const char*> output_node_names = { "softmaxout_1" };
-
+    //std::vector<const char*> output_node_names = { "output1" };
+    
+    if (imageVec.empty()) {
+        cout << "Failed to load image : " << imageFile << endl;
+        return;
+    }
     // initialize input data with values in [0.0, 1.0]
-    for (unsigned int i = 0; i < input_tensor_size; i++)
+   for (unsigned int i = 0; i < input_tensor_size; i++)
         input_tensor_values[i] = (float)i / (input_tensor_size + 1);
-
+  
     // create input tensor object from data values
-    auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-    Ort::Value input_tensor = Ort::Value::CreateTensor<float>(memory_info, input_tensor_values.data(), input_tensor_size, input_node_dims.data(), 4);
-    assert(input_tensor.IsTensor());
+    //auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+    //auto inputTensor = Ort::Value::CreateTensor<float>(memory_info, input.data(), input.size(), inputShape.data(), inputShape.size());
+   // Ort::Value input_tensor = Ort::Value::CreateTensor<float>(memory_info, imageVec.data(), input_tensor_size, input_node_dims.data(), 4);
+    //Ort::Value input_tensor = Ort::Value::CreateTensor<float>(memory_info, imageVec.data(), input_tensor_size, input_node_dims.data(), 4);
+    
+    
+    //copy(imageVec.begin(), imageVec.end(), input_tensor.begin());
+    
 
+    assert(input_tensor.IsTensor());
+    //session.Run(runOptions, inputNames.data(), &inputTensor, 1, outputNames.data(), &outputTensor, 1);
     // score model & input tensor, get back output tensor
-    auto output_tensors = session.Run(Ort::RunOptions{ nullptr }, input_node_names.data(), &input_tensor, 1, output_node_names.data(), 1);
-    assert(output_tensors.size() == 1 && output_tensors.front().IsTensor());
+    //auto output_tensors = session.Run(Ort::RunOptions{ nullptr }, input_node_names.data(), &input_tensor, 1, output_node_names.data(), 1);
+    //auto output_tensors = 
+    Ort::RunOptions runOptions;
+    session.Run(runOptions, inputNames.data(), &inputTensor, 1, outputNames.data(),&outputTensor, 1);
+
+    //assert(output_tensors.size() == 1 && output_tensors.front().IsTensor());
+
+    cout << outputTensor.IsTensor() << endl;
+
 
     // Get pointer to output tensor float values
-    float* floatarr = output_tensors.front().GetTensorMutableData<float>();
-    assert(abs(floatarr[0] - 0.000045) < 1e-6);
+    //float* floatarr = output_tensors.front().GetTensorMutableData<float>();
+    //assert(abs(floatarr[0] - 0.000045) < 1e-6);
 
-    // score the model, and print scores for first 5 classes
-    for (int i = 0; i < 5; i++)
-        printf("Score for class [%d] =  %f\n", i, floatarr[i]);
+    //// score the model, and print scores for first 5 classes
+    //for (int i = 0; i < 5; i++)
+    //    printf("Score for class [%d] =  %f\n", i, floatarr[i]);
 
     // Results should be as below...
     // Score for class[0] = 0.000045
@@ -139,7 +209,12 @@ void run_ort_trt() {
     // Score for class[3] = 0.001180
     // Score for class[4] = 0.001317
 
+    Mat img = cv::Mat(512, 512, CV_32FC1, results.data());
 
+
+    cv::imshow("img", img);
+
+    waitKey(0);
     // release buffers allocated by ORT alloctor
     for (const char* node_name : input_node_names)
         allocator.Free(const_cast<void*>(reinterpret_cast<const void*>(node_name)));

@@ -7,9 +7,9 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include "Helpers.cpp"
 //#include "cuda_provider_factory.h"C:\Program Files\onnxruntime\include
-#include <session/onnxruntime_cxx_api.h>
-#include "providers/tensorrt/tensorrt_provider_factory.h"
-#include "framework/provider_options.h"
+#include <onnxruntime_cxx_api.h>
+#include "tensorrt_provider_factory.h"
+#include "provider_options.h"
 
 
 
@@ -25,7 +25,7 @@
 using namespace std;
 
 
-int mai1n()
+int main()
 {
     clock_t start;
 
@@ -45,7 +45,7 @@ int mai1n()
     //constexpr int64_t numClasses = 1000;
     constexpr int64_t numInputElements = numChannels * height * width;
 
-    const string imageFile = "C:/Users/sales/source/repos/Onnx_test/Onnx_test/repos/f1.bmp";
+    const string imageFile = "C:/Users/sales/source/repos/OnnxTest/OnnxTest/repos/f1.bmp";
     //const string labelFile = "C:/Users/sales/source/repos/Onnx_test/Onnx_test/repos/f2.bmp";
     //auto modelPath = L"C:/Users/sales/source/repos/Onnx_test/Onnx_test/repos/UnoDenoise.onnx";
     auto modelPath = L"D:/Wintec/ADL/PyTorch/UnoDenoise.onnx";
@@ -91,12 +91,12 @@ int mai1n()
 
 
 
-    Ort::SessionOptions session_options;
+    //Ort::SessionOptions session_options;
     // cuda 사용하기 위해 provider 추가
-    Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CUDA(session_options, 0));
+    //Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CUDA(session_options, 0));
     //Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, 0));
     // 추가 graph 최적화 옵션 
-    session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
+    //session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
 
 
 
@@ -105,7 +105,7 @@ int mai1n()
 
     
     // create input tensor object from data values
-    auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+    //auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
     //Ort::Value input_tensor = Ort::Value::CreateTensor<float>(memory_info, input_tensor_values.data(), input_tensor_size, input_node_dims.data(), input_tensor_size);
                                                              //(memory_info, results.data(), results.size(), outputShape.data(), outputShape.size());
 
@@ -119,14 +119,14 @@ int mai1n()
     //Ort::Session session(env, modelPath, sf);
 
     
-    for (int i = 0; i < 1; i++) {
+    //for (int i = 0; i < 1; i++) {
 
 
         start = clock();
 
         // create Session
-        //session = Ort::Session(env, modelPath, Ort::SessionOptions{ nullptr });
-        session =  Ort::Session(env, modelPath, session_options);
+        session = Ort::Session(env, modelPath, Ort::SessionOptions{ nullptr });
+        //session =  Ort::Session(env, modelPath, session_options);
 
 
         // Define I/O array
@@ -178,17 +178,17 @@ int mai1n()
 
         std::cout << "Time: " << (clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 
-    }
+    
 
 
     //cout << results.size() << endl;
 
-    //Mat img = cv::Mat(512, 512, CV_32FC1, results.data());
+    Mat img = cv::Mat(512, 512, CV_32FC1, results.data());
 
 
-    //cv::imshow("img", img);
+    cv::imshow("img", img);
 
-    //waitKey(0);
+    cv::waitKey(0);
 
 
 
