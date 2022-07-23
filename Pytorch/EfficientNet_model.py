@@ -20,7 +20,7 @@ base_model = [
 phi_values = {
     # tuple of : (phi_value, resuolution, drop_rate)
     "b0": (0, 244,0.2), # alpha, beta, gamma, depth = alpha ** phi
-    "b1":(0.5, )
+    "b1":(0.5, 14)
 
 
 
