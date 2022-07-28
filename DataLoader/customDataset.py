@@ -18,3 +18,8 @@ class CustomDataset(Dataset):
         img_path = os.path.join(self.root_dir, self.annotations.iloc[index, 0])
         image = io.imread(img_path)
         y_label = torch.tensor(int(self.annotations.iloc[index, 1]))
+
+        if self.transform:
+            image = self.transform(image)
+
+        return (image, y_label)
