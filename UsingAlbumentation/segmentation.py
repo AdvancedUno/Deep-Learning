@@ -7,6 +7,7 @@ from PIL import Image
 
 image = Image.open("images/test.jpeg")
 mask = Image.open("images/mask.jpeg")
+mask2 = Image.open("images/mask2.jpeg")
 
 
 transform = A.Compose(
@@ -28,14 +29,18 @@ transform = A.Compose(
 
 images_list = [image]
 image = np.array(image)
-
 mask = np.array(mask)
+mask2 = np.array(mask2)
+
 for i in range(15):
-    augmentations = transform(image=image, mask =mask)
+    #augmentations = transform(image=image, mask =mask)
+    augmentations = transform(image=image, masks =[mask,mask2])
     augmented_img = augmentations["image"]
-    augmented_mask = augmentations["mask"]
+    augmented_masks = augmentations["masks"]
+    #augmented_mask2 = augmentations["mask"]
     images_list.append(augmented_img)
-    images_list.append(augmented_mask)
+    images_list.append(augmented_masks[0])
+    images_list.append(augmented_masks[1])
 
 
 
