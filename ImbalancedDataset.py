@@ -18,8 +18,16 @@ def get_loader(root_dir, batch_size):
         transforms.ToTensor(),
     ])
 
-    dataset = datasets.ImageFolder(root=root_dir, transforms=my_transforms)
-    class_weights = [1, 50]
+    dataset = datasets.ImageFolder(root=root_dir, transform=my_transforms)
+    #class_weights = [1, 50]
+
+    class_weights = []
+    for root, subdir, files in os.walk(root_dir):
+        if len(files)> 0:
+            class_weights.append(1/len(files))
+
+
+
     sample_weights = [0] * len(dataset)
 
     for idx, (data, label) in enumerate(dataset):
@@ -35,11 +43,22 @@ def get_loader(root_dir, batch_size):
 
 
 def main():
-    pass
+    loader = get_loader(root_dir="dataset", batch_size=8)
+
+    num_A = []
+    num_B = []
+    for epoch in range(10):
+        for data, labels, in loader:
+            #print(labels)
+            num_A += torch.sum(labels==0)
+            num_B += torch.sum(labels==1)
 
 
+    print(num_A)
+    print(num_B)
 
-if __name__ = "__main__":
+
+if __name__ == "__main__":
     main()
 
 
