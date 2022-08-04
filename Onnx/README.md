@@ -9,6 +9,7 @@ https://artwork.lfaidata.foundation/projects/onnx/
 
 When people build models using different libraries or platforms, they often face limitations with deploying models to different devices, languagues, or even to different platforms.
 
+
 The key to solving this problem is using ONNX.
 
 ONNX is an open standard for machine learning model interoperability developed as an open source library, mainly led by Microsoft and Facebook.
@@ -17,7 +18,9 @@ ONNX is an open standard for machine learning model interoperability developed a
 
 What ONNX does is establish a standard building block of deep learning or neural network models.
 
+
 This enables AI researchers and developers to use models in different compilers, frameworks, and devices.
+
 
 ![1_HY5wZjV143_phvVFQUFjvw](https://user-images.githubusercontent.com/108073642/182836762-d9b7aef9-f03b-4e6c-bb8d-720715658c0e.png)
 https://medium.com/codait/contribute-to-the-open-neural-network-exchange-onnx-5cfff6889761
@@ -31,6 +34,7 @@ Thanks to ONNX, people can now easily deploy the same models to various devices,
 
 
 ONNX is widely supported, such as Pytorch, TensorFlow, and Caffe.
+
 
 With ONNX people can develop models in the framework they want and later, they can just simply convert their models to ONNX format to deploy them to different tools and devices.
 
