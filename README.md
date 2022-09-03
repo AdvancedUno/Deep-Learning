@@ -3,3 +3,4 @@
 - Pytorch
 - HuggingFace
 - MMSegmentation
+- PyTorch Lightning
