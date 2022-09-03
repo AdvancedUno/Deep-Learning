@@ -2,3 +2,4 @@
 - ONNX
 - Pytorch
 - HuggingFace
+- MMSegmentation
