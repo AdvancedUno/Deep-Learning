@@ -18,9 +18,11 @@ Welcome to the Deep Learning Insights and Innovations repository! This repositor
 ```
 
 
-# Explore Projects: Navigate through the project directories. Each one includes a README with detailed instructions on running experiments and understanding the models.
+# Explore Projects: 
+Navigate through the project directories. Each one includes a README with detailed instructions on running experiments and understanding the models.
 
-# Participate and Contribute: Your contributions can make a significant impact. Whether it's adding new projects, enhancing existing ones, or providing valuable feedback, your participation is highly encouraged.
+# Participate and Contribute: 
+Your contributions can make a significant impact. Whether it's adding new projects, enhancing existing ones, or providing valuable feedback, your participation is highly encouraged.
 
 # 🤝 Contributing
 We welcome contributions of all forms. If you'd like to contribute, please fork the repository, make your changes, and submit a pull request. For more detailed instructions, refer to the CONTRIBUTING.md file.
