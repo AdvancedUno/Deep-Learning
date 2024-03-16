@@ -18,17 +18,17 @@ Welcome to the Deep Learning Insights and Innovations repository! This repositor
 ```
 
 
-# Explore Projects: 
+## Explore Projects: 
 Navigate through the project directories. Each one includes a README with detailed instructions on running experiments and understanding the models.
 
-# Participate and Contribute: 
+## Participate and Contribute: 
 Your contributions can make a significant impact. Whether it's adding new projects, enhancing existing ones, or providing valuable feedback, your participation is highly encouraged.
 
-# 🤝 Contributing
+## 🤝 Contributing
 We welcome contributions of all forms. If you'd like to contribute, please fork the repository, make your changes, and submit a pull request. For more detailed instructions, refer to the CONTRIBUTING.md file.
 
-# 📜 License
+## 📜 License
 This repository is made available under the MIT License, fostering an open and inclusive environment for development. See the LICENSE file for more details.
 
-# 💡 Let's Illuminate the Future of AI Together!
+## 💡 Let's Illuminate the Future of AI Together!
 Your curiosity and enthusiasm are what drive advancements in Deep Learning. Let's embark on this journey together, exploring the endless possibilities that AI has to offer.
