@@ -27,8 +27,6 @@ Your contributions can make a significant impact. Whether it's adding new projec
 ## 🤝 Contributing
 We welcome contributions of all forms. If you'd like to contribute, please fork the repository, make your changes, and submit a pull request. For more detailed instructions, refer to the CONTRIBUTING.md file.
 
-## 📜 License
-This repository is made available under the MIT License, fostering an open and inclusive environment for development. See the LICENSE file for more details.
 
 ## 💡 Let's Illuminate the Future of AI Together!
 Your curiosity and enthusiasm are what drive advancements in Deep Learning. Let's embark on this journey together, exploring the endless possibilities that AI has to offer.
